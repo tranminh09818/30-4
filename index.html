@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kỷ niệm 50 năm Giải phóng Miền Nam - Thống nhất Đất nước (30/4/1975 - 30/4/2025)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    <style>
+        /* Định nghĩa các biến màu */
+        :root {
+            --red: #DA251D;
+            --yellow: #FFFF00;
+            --blue: #0073CF;
+            --dark-blue: #1D3557;
+            --light-blue: #A8DADC;
+            --white: #F1FAEE;
+            --gold-sparkle: #FFD700;
+            /* Màu vàng cho hiệu ứng lấp lánh */
+        }
+
+        /* Reset CSS cơ bản */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body - Nền và Font chữ */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--red), var(--white), var(--light-blue), var(--dark-blue));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            /* Animation nền gradient */
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Ngăn overflow ngang do các phần tử tuyệt đối */
+            position: relative;
+            /* Cần thiết cho các phần tử position: absolute/fixed */
+        }
+
+        /* Animation chuyển màu nền */
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Container chính giới hạn chiều rộng */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            /* Đảm bảo nội dung nằm trên các lớp canvas */
+        }
+
+        /* Header - Tiêu đề */
+        header {
+            text-align: center;
+            padding: 40px 0 20px;
+            position: relative;
+        }
+
+        /* Tiêu đề H1 */
+        h1 {
+            font-family: 'Merriweather', serif;
+            color: var(--red);
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            /* Responsive font size */
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            /* Trạng thái ban đầu cho animation JS */
+            transform: translateY(30px);
+            /* Trạng thái ban đầu cho animation JS */
+            transition: all 1s ease;
+            /* Transition cho animation JS */
+            /* Hiệu ứng phát sáng cho tiêu đề */
+            animation: glowEffect 1.5s ease-in-out infinite alternate;
+        }
+
+        /* Trạng thái hiển thị của H1 khi cuộn đến */
+        h1.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animation phát sáng cho tiêu đề */
+        @keyframes glowEffect {
+            from {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px var(--red);
+            }
+
+            to {
+                text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4), 0 0 20px var(--red), 0 0 30px var(--gold-sparkle);
+            }
+        }
+
+        /* Phần highlight trong tiêu đề */
+        .title-highlight {
+            display: inline-block;
+            animation: pulse 2s infinite alternate;
+            /* Hiệu ứng pulse nhẹ */
+        }
+
+        /* Animation pulse */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.03);
+            }
+        }
+
+        /* Hộp chứa ngày tháng */
+        .date-box {
+            background: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            margin: 15px 0 30px;
+            backdrop-filter: blur(5px);
+            /* Hiệu ứng kính mờ */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            /* Trạng thái ban đầu cho animation JS */
+            transform: translateY(30px);
+            /* Trạng thái ban đầu cho animation JS */
+            transition: all 1s ease 0.3s;
+            /* Transition cho animation JS */
+            /* Hiệu ứng hộp phát sáng nhẹ */
+            animation: dateBoxGlow 2s ease-in-out infinite alternate;
+        }
+
+        /* Animation phát sáng cho hộp ngày tháng */
+        @keyframes dateBoxGlow {
+            from {
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            to {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), 0 0 10px var(--yellow);
+            }
+        }
+
+        /* Trạng thái hiển thị của hộp ngày tháng khi cuộn đến */
+        .date-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Chữ trong hộp ngày tháng */
+        .date-text {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            /* Responsive font size */
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            /* Hiệu ứng lấp lánh cho chữ ngày tháng */
+            animation: textSparkle 1.8s ease-in-out infinite alternate;
+        }
+
+        /* Animation lấp lánh cho chữ ngày tháng */
+        @keyframes textSparkle {
+            from {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            to {
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6), 0 0 8px var(--yellow);
+            }
+        }
+
+        /* Section chứa cờ */
+        .flags-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+            padding-bottom: 40px;
+            /* Thêm padding dưới để tạo khoảng trống với section 3D */
+            opacity: 0;
+            /* Trạng thái ban đầu cho animation JS */
+            transform: translateY(30px);
+            /* Trạng thái ban đầu cho animation JS */
+            transition: all 1s ease 0.6s;
+            /* Transition cho animation JS */
+            position: relative;
+            /* Để các phần tử con có thể z-index trên nền */
+            z-index: 5;
+            /* Đảm bảo các lá cờ nằm trên các hiệu ứng nền */
+        }
+
+        /* Trạng thái hiển thị của section cờ khi cuộn đến */
+        .flags-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Card chứa mỗi lá cờ */
+        .flag-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            /* Đảm bảo nội dung card nằm trên đường line::before */
+        }
+
+        /* Hiệu ứng hover cho card cờ */
+        .flag-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Đường line màu phía trên card cờ */
+        .flag-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--red), var(--yellow), var(--blue));
+            z-index: 2;
+            /* Đảm bảo đường line nằm trên nền card */
+        }
+
+        /* Tiêu đề trong card cờ */
+        h2 {
+            color: var(--dark-blue);
+            margin: 0 0 20px 0;
+            font-size: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Đường line dưới tiêu đề H2 */
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--red);
+            border-radius: 3px;
+        }
+
+        /* Canvas vẽ cờ */
+        .flag-canvas {
+            border: 3px solid white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            background: white;
+            /* Nền trắng khi chưa vẽ xong */
+            width: 100%;
+            height: auto;
+            aspect-ratio: 3/2;
+            /* Tỷ lệ 3:2 cho cờ */
+            transition: all 0.3s ease;
+        }
+
+        /* Hiệu ứng box-shadow khi hover card cờ */
+        .flag-card:hover .flag-canvas {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Section mô phỏng 3D */
+        .simulation-section {
+            text-align: center;
+            padding: 40px 20px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            /* Giới hạn chiều rộng section 3D */
+            opacity: 0;
+            /* Trạng thái ban đầu cho animation JS */
+            transform: translateY(30px);
+            /* Trạng thái ban đầu cho animation JS */
+            transition: all 1s ease 0.9s;
+            /* Transition cho animation JS */
+            position: relative;
+            z-index: 5;
+            /* Đảm bảo section 3D nằm trên các hiệu ứng nền */
+        }
+
+        .simulation-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .simulation-section h2 {
+            color: var(--dark-blue);
+            margin-bottom: 20px;
+            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .simulation-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--red);
+            border-radius: 3px;
+        }
+
+
+        /* Canvas cho mô phỏng 3D */
+        #simulationCanvas {
+            display: block;
+            /* Loại bỏ khoảng trắng dưới canvas */
+            width: 100%;
+            /* Chiều rộng 100% của container */
+            height: 400px;
+            /* Chiều cao cố định hoặc responsive hơn nếu cần */
+            border: 3px solid var(--dark-blue);
+            border-radius: 10px;
+            margin-top: 20px;
+            background-color: #a0c0e0;
+            /* Màu nền cho cảnh 3D (trời) */
+        }
+
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            /* Trạng thái ban đầu cho animation JS */
+            transform: translateY(30px);
+            /* Trạng thái ban đầu cho animation JS */
+            transition: all 1s ease 1.2s;
+            /* Transition cho animation JS */
+            position: relative;
+            z-index: 10;
+            /* Đảm bảo footer nằm trên các lớp canvas */
+        }
+
+        /* Trạng thái hiển thị của footer khi cuộn đến */
+        footer.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Canvas cho các hiệu ứng nền (hạt, v.v.) */
+        #backgroundEffectsCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            /* Nằm trên nền gradient, dưới pháo hoa và nội dung */
+            pointer-events: none;
+            /* Cho phép click xuyên qua */
+        }
+
+        /* Pháo hoa canvas */
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            /* Nằm trên hiệu ứng nền, dưới nội dung */
+            pointer-events: none;
+            /* Cho phép click xuyên qua */
+        }
+
+        /* Progress bar khi cuộn trang */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            /* Luôn nằm trên cùng */
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red), var(--yellow), var(--blue));
+            width: 0;
+            transition: width 0.3s ease-out;
+        }
+
+        /* Các phần tử trôi nổi */
+        .floating-element {
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: 3;
+            /* Nằm trên fireworks, dưới nội dung chính */
+            /* animation: float 15s infinite linear; /* Animation ban đầu */
+            /* Animation được set trong JS với delay và duration ngẫu nhiên, thêm fadeInOut */
+        }
+
+        /* Animation di chuyển và xoay của phần tử trôi nổi */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        /* Animation mờ dần/hiện ra của phần tử trôi nổi */
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0.1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            /* Đỉnh điểm độ trong suốt */
+            100% {
+                opacity: 0.1;
+            }
+        }
+
+
+        /* Điều chỉnh Responsive */
+        @media (max-width: 768px) {
+            .flags-section {
+                gap: 20px;
+            }
+
+            .flag-card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .simulation-section {
+                padding: 20px 10px;
+            }
+
+            #simulationCanvas {
+                height: 300px;
+                /* Giảm chiều cao canvas 3D trên mobile */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <canvas id="backgroundEffectsCanvas"></canvas>
+    <canvas id="fireworksCanvas"></canvas>
+
+    <div class="container">
+        <header>
+            <h1 id="mainTitle"><span class="title-highlight">Kỷ niệm 50 năm Ngày Giải phóng Miền Nam</span><br>Thống
+                nhất Đất nước</h1>
+
+            <div class="date-box" id="dateBox">
+                <div class="date-text">30/4/1975 - 30/4/2025</div>
+            </div>
+        </header>
+
+        <div class="flags-section" id="flagsSection">
+            <div class="flag-card">
+                <h2>Quốc kỳ Việt Nam</h2>
+                <canvas id="vietnamFlag" class="flag-canvas" width="600" height="400"></canvas>
+            </div>
+
+            <div class="flag-card">
+                <h2>Cờ Giải phóng</h2>
+                <canvas id="liberationFlag" class="flag-canvas" width="600" height="400"></canvas>
+            </div>
+        </div>
+
+        <div class="simulation-section" id="simulationSection">
+            <h2>Khoảnh khắc Lịch sử: Xe tăng tiến vào Dinh Độc Lập</h2>
+            <canvas id="simulationCanvas"></canvas>
+        </div>
+
+
+        <footer id="footer">
+            <p>Kỷ niệm 50 năm Ngày Giải phóng hoàn toàn miền Nam, thống nhất đất nước</p>
+        </footer>
+    </div>
+
+    <script>
+        // Khai báo âm thanh va chạm
+        const crashSound = new Audio('crash.mp3'); // Đường dẫn đến file âm thanh va chạm
+        crashSound.volume = 0.7; // Điều chỉnh âm lượng
+
+        const loader = new THREE.TextureLoader();
+
+        // Thêm texture cho xe tăng
+        const tankTexture = loader.load('textures/tank.jpg'); // Đường dẫn đến file texture
+        const tankMaterial = new THREE.MeshStandardMaterial({ map: tankTexture });
+
+        // Thêm texture cho cổng
+        const gateTexture = loader.load('textures/gate.jpg'); // Đường dẫn đến file texture
+        const gateMaterial = new THREE.MeshStandardMaterial({ map: gateTexture });
+
+        // --- Hiệu ứng khi cuộn trang và hiển thị phần tử ---
+        window.addEventListener('scroll', function () {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            // Tính toán phần trăm đã cuộn
+            const scrollProgress = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollProgress + '%';
+
+            // Kích hoạt animation khi cuộn đến các phần tử
+            checkVisibility();
+        });
+
+        // Kiểm tra xem phần tử có nằm trong viewport hay không (với offset 75%)
+        function isInViewport(element) {
+            if (!element) return false; // Thêm kiểm tra null để an toàn
+            const rect = element.getBoundingClientRect();
+            return (
+                // Kiểm tra nếu đỉnh của phần tử nằm trên 75% chiều cao viewport TỪ DƯỚI LÊN
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75
+                // Hoặc kiểm tra đơn giản hơn: rect.top < window.innerHeight && rect.bottom >= 0;
+            );
+        }
+
+        // Kiểm tra và thêm class 'visible' cho các phần tử khi chúng vào viewport
+        function checkVisibility() {
+            const elements = [
+                document.getElementById('mainTitle'),
+                document.getElementById('dateBox'),
+                document.getElementById('flagsSection'),
+                document.getElementById('simulationSection'), // Thêm section 3D vào danh sách kiểm tra
+                document.getElementById('footer')
+            ];
+
+            elements.forEach(el => {
+                if (el && isInViewport(el)) { // Thêm kiểm tra null
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        // --- Mô phỏng 3D cảnh xe tăng húc đổ cổng Dinh Độc Lập ---
+        let scene, camera, renderer, tank, gateLeft, gateRight, crossbar, animationId; // Thêm crossbar vào biến toàn cục
+        let tankSpeed = 0.05; // Tốc độ di chuyển của xe tăng
+        let gateBroken = false; // Trạng thái cổng đã bị húc đổ chưa
+
+        function init3DScene() {
+            const simulationCanvas = document.getElementById('simulationCanvas');
+            if (!simulationCanvas) {
+                console.error("Simulation canvas not found!");
+                return;
+            }
+
+            // 1. Tạo Scene (không gian 3D)
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xa0c0e0); // Màu nền trời
+
+            // 2. Tạo Camera
+            // PerspectiveCamera( fieldOfView, aspectRatio, near, far )
+            camera = new THREE.PerspectiveCamera(75, simulationCanvas.clientWidth / simulationCanvas.clientHeight, 0.1, 1000);
+            camera.position.set(0, 5, 15); // Vị trí camera ban đầu (x, y, z)
+            camera.lookAt(0, 2, 0); // Camera nhìn về điểm (0, 2, 0)
+
+            // 3. Tạo Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: simulationCanvas, antialias: true });
+            renderer.setSize(simulationCanvas.clientWidth, simulationCanvas.clientHeight);
+            renderer.shadowMap.enabled = true; // Bật đổ bóng (tùy chọn)
+
+            // Xử lý resize canvas 3D
+            function resizeSimulationCanvas() {
+                const width = simulationCanvas.clientWidth;
+                const height = simulationCanvas.clientHeight;
+                if (simulationCanvas.width !== width || simulationCanvas.height !== height) {
+                    renderer.setSize(width, height);
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                }
+            }
+            window.addEventListener('resize', resizeSimulationCanvas);
+            resizeSimulationCanvas(); // Resize lần đầu
+
+            // 4. Tạo các đối tượng 3D
+
+            // Mặt đất
+            const groundGeometry = new THREE.PlaneGeometry(50, 50);
+            const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x8FBC8F }); // Màu xanh lá cây
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2; // Xoay mặt đất nằm ngang
+            ground.receiveShadow = true; // Mặt đất nhận bóng
+            scene.add(ground);
+
+            // Cổng Dinh Độc Lập (mô hình đơn giản)
+            const pillarGeometry = new THREE.BoxGeometry(0.5, 4, 0.5); // Cột cổng
+
+            gateLeft = new THREE.Mesh(pillarGeometry, gateMaterial);
+            gateLeft.position.set(-2, 2, 0); // Vị trí cột trái
+            gateLeft.castShadow = true;
+            gateLeft.receiveShadow = true;
+            scene.add(gateLeft);
+
+            gateRight = new THREE.Mesh(pillarGeometry, gateMaterial);
+            gateRight.position.set(2, 2, 0); // Vị trí cột phải
+            gateRight.castShadow = true;
+            gateRight.receiveShadow = true;
+            scene.add(gateRight);
+
+            const crossbarGeometry = new THREE.BoxGeometry(4.5, 0.5, 0.5); // Thanh ngang cổng
+            crossbar = new THREE.Mesh(crossbarGeometry, gateMaterial); // Gán vào biến toàn cục
+            crossbar.position.set(0, 4.25, 0); // Vị trí thanh ngang
+            crossbar.castShadow = true;
+            crossbar.receiveShadow = true;
+            scene.add(crossbar);
+
+            // Xe tăng (mô hình cải tiến đơn giản)
+            const tankBodyGeometry = new THREE.BoxGeometry(2, 1, 3);
+            tank = new THREE.Mesh(tankBodyGeometry, tankMaterial);
+            tank.position.set(0, 0.5, 20); // Vị trí ban đầu của xe tăng (xa cổng)
+            tank.castShadow = true;
+            tank.receiveShadow = true;
+            scene.add(tank);
+
+            const turretGeometry = new THREE.BoxGeometry(1.2, 0.8, 1.2);
+            const turret = new THREE.Mesh(turretGeometry, tankMaterial);
+            turret.position.set(0, 0.8, -0.5); // Vị trí tháp pháo so với thân xe
+            tank.add(turret); // Thêm tháp pháo vào xe tăng
+
+            const barrelGeometry = new THREE.CylinderGeometry(0.1, 0.1, 2.5, 8);
+            const barrel = new THREE.Mesh(barrelGeometry, tankMaterial);
+            barrel.rotation.z = Math.PI / 2; // Xoay nòng pháo nằm ngang
+            barrel.position.set(0, 0, -1.25); // Vị trí nòng pháo so với tháp pháo
+            turret.add(barrel); // Thêm nòng pháo vào tháp pháo
+
+            // Thêm bánh xích (đơn giản)
+            const trackGeometry = new THREE.BoxGeometry(0.3, 0.8, 3.2);
+            const trackMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 }); // Màu xám đen
+            const trackLeft = new THREE.Mesh(trackGeometry, trackMaterial);
+            trackLeft.position.set(-1, 0, 0);
+            tank.add(trackLeft);
+            const trackRight = new THREE.Mesh(trackGeometry, trackMaterial);
+            trackRight.position.set(1, 0, 0);
+            tank.add(trackRight);
+
+
+            // 5. Thêm Ánh sáng
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Ánh sáng môi trường
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8); // Ánh sáng định hướng
+            directionalLight.position.set(5, 10, 7);
+            directionalLight.castShadow = true; // Bật đổ bóng cho nguồn sáng này
+            // Cấu hình đổ bóng
+            directionalLight.shadow.mapSize.width = 1024;
+            directionalLight.shadow.mapSize.height = 1024;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 50;
+            directionalLight.shadow.camera.left = -10;
+            directionalLight.shadow.camera.right = 10;
+            directionalLight.shadow.camera.top = 10;
+            directionalLight.shadow.camera.bottom = -10;
+            scene.add(directionalLight);
+
+            // Hiệu ứng bụi khi cổng bị đâm
+            function createDustEffect(position) {
+                const dustParticles = [];
+                for (let i = 0; i < 50; i++) {
+                    const particle = {
+                        x: position.x,
+                        y: position.y,
+                        z: position.z,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: Math.random() * 2,
+                        vz: (Math.random() - 0.5) * 2,
+                        alpha: 1
+                    };
+                    dustParticles.push(particle);
+                }
+
+                function animateDust() {
+                    dustParticles.forEach((p, index) => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.z += p.vz;
+                        p.alpha -= 0.02;
+
+                        if (p.alpha <= 0) {
+                            dustParticles.splice(index, 1);
+                        }
+                    });
+
+                    // Vẽ bụi và khói
+                    dustParticles.forEach(p => {
+                        const dust = new THREE.Mesh(
+                            new THREE.SphereGeometry(0.1, 8, 8),
+                            new THREE.MeshBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: p.alpha })
+                        );
+                        dust.position.set(p.x, p.y, p.z);
+                        scene.add(dust);
+
+                        setTimeout(() => scene.remove(dust), 1000); // Xóa bụi sau 1 giây
+                    });
+
+                    if (dustParticles.length > 0) {
+                        requestAnimationFrame(animateDust);
+                    }
+                }
+
+                animateDust();
+            }
+
+            // Hiệu ứng rung camera khi cổng bị đâm
+            function shakeCamera() {
+                const shakeIntensity = 0.2;
+                const shakeDuration = 500;
+                const startTime = Date.now();
+
+                function animateShake() {
+                    const elapsed = Date.now() - startTime;
+                    if (elapsed < shakeDuration) {
+                        const offsetX = (Math.random() - 0.5) * shakeIntensity;
+                        const offsetY = (Math.random() - 0.5) * shakeIntensity;
+                        const offsetZ = (Math.random() - 0.5) * shakeIntensity;
+
+                        camera.position.x += offsetX;
+                        camera.position.y += offsetY;
+                        camera.position.z += offsetZ;
+
+                        requestAnimationFrame(animateShake);
+                    }
+                }
+
+                animateShake();
+            }
+
+            // 6. Vòng lặp Animation
+            function animate() {
+                animationId = requestAnimationFrame(animate); // Yêu cầu frame tiếp theo
+
+                // Di chuyển xe tăng về phía trước (giảm vị trí Z)
+                if (tank.position.z > 1 && !gateBroken) {
+                    tank.position.z -= tankSpeed;
+                    animateTankTracks(); // Gọi hàm quay bánh xích
+                } else if (!gateBroken) {
+                    // Khi xe tăng chạm cổng lần đầu
+                    gateBroken = true;
+
+                    // Phát âm thanh va chạm
+                    crashSound.currentTime = 0;
+                    crashSound.play().catch(e => console.error("Lỗi khi phát âm thanh:", e));
+
+                    // Hiệu ứng rung và bụi
+                    shakeCamera();
+                    createDustEffect({ x: 0, y: 2, z: 0 });
+
+                    // Áp dụng hiệu ứng húc đổ cổng
+                    new TWEEN.Tween(gateLeft.rotation)
+                        .to({ z: Math.PI / 2, y: Math.PI / 8 }, 1200)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .start();
+                    new TWEEN.Tween(gateLeft.position)
+                        .to({ x: -4, y: 1, z: 2 }, 1200)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .start();
+
+                    new TWEEN.Tween(gateRight.rotation)
+                        .to({ z: -Math.PI / 2, y: -Math.PI / 8 }, 1200)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .start();
+                    new TWEEN.Tween(gateRight.position)
+                        .to({ x: 4, y: 1, z: 2 }, 1200)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .start();
+
+                    new TWEEN.Tween(crossbar.position)
+                        .to({ y: 0, z: 1 }, 600)
+                        .easing(TWEEN.Easing.Quadratic.In)
+                        .start();
+                    new TWEEN.Tween(crossbar.rotation)
+                        .to({ x: Math.PI / 4 }, 600)
+                        .easing(TWEEN.Easing.Quadratic.In)
+                        .start();
+
+                    // Tiếp tục cho xe tăng tiến vào một đoạn ngắn sau khi cổng đổ
+                    new TWEEN.Tween(tank.position)
+                        .to({ z: -5 }, 3000)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .start();
+
+                    // Animation camera theo xe tăng sau khi húc cổng
+                    new TWEEN.Tween(camera.position)
+                        .to({ x: 0, y: 3, z: 5 }, 3000)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .start();
+                    new TWEEN.Tween(camera.rotation)
+                        .to({ y: 0 }, 3000)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .start();
+
+                    // Reset trạng thái sau khi animation kết thúc
+                    setTimeout(resetScene, 5000); // Reset sau 5 giây
+                }
+
+                // Cập nhật TWEEN (cho animation cổng và camera)
+                TWEEN.update();
+
+                // Gọi hàm quay bánh xích
+                animateTankTracks();
+
+                renderer.render(scene, camera); // Render cảnh
+            }
+
+            // Bắt đầu animation chỉ khi section 3D hiển thị trong viewport
+            // Chúng ta cần một Observer để theo dõi sự hiển thị của section
+            const simulationSection = document.getElementById('simulationSection');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Nếu section hiển thị, bắt đầu animation
+                        if (!animationId) { // Tránh chạy nhiều lần
+                            // Reset vị trí xe tăng và cổng khi bắt đầu lại animation
+                            tank.position.set(0, 0.5, 20);
+                            gateLeft.position.set(-2, 2, 0);
+                            gateLeft.rotation.set(0, 0, 0);
+                            gateRight.position.set(2, 2, 0);
+                            gateRight.rotation.set(0, 0, 0);
+                            crossbar.position.set(0, 4.25, 0);
+                            crossbar.rotation.set(0, 0, 0);
+                            gateBroken = false; // Reset trạng thái cổng
+                            camera.position.set(0, 5, 15); // Reset vị trí camera
+                            camera.lookAt(0, 2, 0); // Reset hướng nhìn camera
+
+                            animate();
+                        }
+                    } else {
+                        // Nếu section không hiển thị, dừng animation để tiết kiệm tài nguyên
+                        if (animationId) {
+                            cancelAnimationFrame(animationId);
+                            animationId = null;
+                        }
+                    }
+                });
+            }, { threshold: 0.1 }); // Kích hoạt khi ít nhất 10% của section hiển thị
+
+            observer.observe(simulationSection); // Bắt đầu theo dõi section 3D
+        }
+
+        function resetScene() {
+            // Reset vị trí xe tăng
+            tank.position.set(0, 0.5, 20);
+
+            // Reset vị trí và góc quay của cổng
+            gateLeft.position.set(-2, 2, 0);
+            gateLeft.rotation.set(0, 0, 0);
+            gateRight.position.set(2, 2, 0);
+            gateRight.rotation.set(0, 0, 0);
+            crossbar.position.set(0, 4.25, 0);
+            crossbar.rotation.set(0, 0, 0);
+
+            // Reset camera
+            camera.position.set(0, 5, 15);
+            camera.lookAt(0, 2, 0);
+
+            // Reset trạng thái cổng
+            gateBroken = false;
+        }
+
+        function animateTankTracks() {
+            const trackSpeed = 0.1; // Tốc độ quay của bánh xích
+            tank.children.forEach(child => {
+                if (child.geometry.type === 'BoxGeometry' && child.material.color.getHex() === 0x333333) {
+                    child.rotation.z += trackSpeed; // Quay bánh xích
+                }
+            });
+        }
+
+        // --- Chạy các hàm khởi tạo khi DOM đã load hoàn toàn ---
+        document.addEventListener('DOMContentLoaded', function () {
+            checkVisibility(); // Kiểm tra visibility ngay khi load
+            drawFlagsWithAnimation(); // Vẽ cờ có animation
+            initBackgroundParticles(); // Khởi tạo hiệu ứng hạt nền
+            initFireworks(); // Khởi tạo hiệu ứng pháo hoa
+            addFloatingElements(); // Thêm các phần tử trôi nổi
+            init3DScene(); // Khởi tạo cảnh 3D
+
+            // Kích hoạt lại checkVisibility khi trang load hoàn toàn và có thể đã cuộn sẵn
+            // setTimeout(checkVisibility, 100); // Đôi khi cần delay nhẹ
+        });
+
+
+        // --- Vẽ cờ Việt Nam và cờ Giải phóng lên Canvas ---
+        function drawFlagsWithAnimation() {
+            const vnCanvas = document.getElementById('vietnamFlag');
+            // Lấy context 2D, thêm kiểm tra null
+            const vnCtx = vnCanvas ? vnCanvas.getContext('2d') : null;
+            const libCanvas = document.getElementById('liberationFlag');
+            const libCtx = libCanvas ? libCanvas.getContext('2d') : null;
+
+            // Thoát nếu không tìm thấy một trong hai canvas
+            if (!vnCtx || !libCtx) {
+                console.error("Canvas element not found!");
+                return;
+            }
+
+            // Hàm điều chỉnh kích thước Canvas theo kích thước hiển thị của nó trong CSS
+            function resizeCanvas(canvas) {
+                const displayWidth = canvas.clientWidth;
+                const displayHeight = canvas.clientHeight;
+
+                // Chỉ resize nếu kích thước hiển thị khác với kích thước thực tế của canvas
+                if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+                    canvas.width = displayWidth;
+                    canvas.height = displayHeight;
+                    return true; // Trả về true nếu có resize
+                }
+                return false; // Trả về false nếu không resize
+            }
+
+            // Resize canvas lần đầu khi load trang
+            const vnResized = resizeCanvas(vnCanvas);
+            const libResized = resizeCanvas(libCanvas);
+
+            // Bắt đầu vẽ cờ Việt Nam với animation
+            drawFlagAnimation(vnCtx, vnCanvas.width, vnCanvas.height, 'vietnam', function () {
+                // Sử dụng callback để bắt đầu vẽ cờ Giải phóng SAU KHI cờ Việt Nam hoàn thành
+                setTimeout(function () {
+                    drawFlagAnimation(libCtx, libCanvas.width, libCanvas.height, 'liberation');
+                }, 500); // Delay 500ms trước khi vẽ cờ thứ 2
+            });
+
+            // Lắng nghe sự kiện resize của cửa sổ để vẽ lại cờ nếu kích thước canvas thay đổi
+            window.addEventListener('resize', function () {
+                if (resizeCanvas(vnCanvas)) {
+                    drawFlagAnimation(vnCtx, vnCanvas.width, vnCtx.height, 'vietnam');
+                }
+                if (resizeCanvas(libCanvas)) {
+                    drawFlagAnimation(libCtx, libCanvas.width, libCtx.height, 'liberation');
+                }
+            });
+        }
+
+        // Hàm vẽ cờ với hiệu ứng animation (fill từ từ)
+        function drawFlagAnimation(ctx, width, height, flagType, callback) {
+            let progress = 0; // Tiến trình animation (từ 0 đến 1)
+            const duration = 4000; // Thời gian animation (milliseconds) - Đã tăng thời gian
+            const startTime = Date.now(); // Thời điểm bắt đầu animation
+
+            function animate() {
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+                // Cập nhật tiến trình, giới hạn tối đa là 1
+                progress = Math.min(elapsed / duration, 1);
+
+                // Xóa toàn bộ canvas để vẽ lại frame mới
+                ctx.clearRect(0, 0, width, height);
+
+                // Vẽ nền trắng (hoặc màu ban đầu của canvas)
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; // Nền trắng hơi trong suốt
+                ctx.fillRect(0, 0, width, height);
+
+                // Vẽ cờ dựa trên loại cờ
+                if (flagType === 'vietnam') {
+                    // Vẽ nền đỏ: fill từ dưới lên theo tiến trình
+                    const redHeight = height * progress;
+                    ctx.fillStyle = '#DA251D';
+                    ctx.fillRect(0, height - redHeight, width, redHeight);
+
+                    // Vẽ ngôi sao vàng khi tiến trình đạt trên 50%
+                    if (progress > 0.5) {
+                        // Tính toán tiến trình cho ngôi sao (từ 0 đến 1 khi cờ được vẽ từ 50% đến 100%)
+                        const starProgress = (progress - 0.5) * 2;
+                        // Vẽ ngôi sao tại trung tâm, kích thước tăng dần theo starProgress
+                        drawStar(ctx, width / 2, height / 2, Math.min(width, height) * 0.15 * starProgress, '#FFFF00');
+                    }
+                }
+                else if (flagType === 'liberation') {
+                    // Cờ Giải phóng: nửa trên đỏ, nửa dưới xanh
+                    // Vẽ nửa trên đỏ: fill từ trên xuống theo tiến trình
+                    const redHeight = (height / 2) * progress;
+                    ctx.fillStyle = '#DA251D';
+                    ctx.fillRect(0, 0, width, redHeight);
+
+                    // Vẽ nửa dưới xanh: fill từ dưới lên theo tiến trình
+                    const blueHeight = (height / 2) * progress;
+                    ctx.fillStyle = '#0073CF';
+                    ctx.fillRect(0, height - blueHeight, width, blueHeight);
+
+                    // Vẽ ngôi sao vàng tại trung tâm khi tiến trình đạt trên 50%
+                    if (progress > 0.5) {
+                        // Tính toán tiến trình cho ngôi sao
+                        const starProgress = (progress - 0.5) * 2;
+                        // Vẽ ngôi sao tại trung tâm, kích thước tăng dần theo starProgress
+                        drawStar(ctx, width / 2, height / 2, Math.min(width, height) * 0.12 * starProgress, '#FFFF00');
+                    }
+                }
+
+                // Tiếp tục animation nếu tiến trình chưa đạt 100%
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    // Khi animation hoàn thành, gọi callback nếu có
+                    if (callback) {
+                        callback();
+                    }
+                }
+            }
+
+            // Bắt đầu animation
+            animate();
+        }
+
+        // Hàm vẽ ngôi sao 5 cánh lên Canvas
+        function drawStar(ctx, cx, cy, radius, color) {
+            ctx.save(); // Lưu trạng thái context hiện tại
+            ctx.fillStyle = color; // Đặt màu fill cho ngôi sao
+            // Thêm hiệu ứng shadow cho ngôi sao
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetY = 3;
+            ctx.beginPath(); // Bắt đầu một đường vẽ mới
+
+            // Vẽ 5 đỉnh và 5 điểm lõm của ngôi sao
+            for (let i = 0; i < 5; i++) {
+                const angle1 = (i * 2 * Math.PI / 5) - Math.PI / 2; // Góc của đỉnh sao
+                const angle2 = angle1 + Math.PI / 5; // Góc của điểm lõm
+
+                const x1 = cx + radius * Math.cos(angle1); // Tọa độ X của đỉnh
+                const y1 = cy + radius * Math.sin(angle1); // Tọa độ Y của đỉnh
+                const x2 = cx + radius * 0.4 * Math.cos(angle2); // Tọa độ X của điểm lõm (bán kính nhỏ hơn)
+                const y2 = cy + radius * 0.4 * Math.sin(angle2); // Tọa độ Y của điểm lõm
+
+                if (i === 0) {
+                    ctx.moveTo(x1, y1); // Bắt đầu đường vẽ từ đỉnh đầu tiên
+                } else {
+                    ctx.lineTo(x1, y1); // Vẽ đường đến đỉnh tiếp theo
+                }
+                ctx.lineTo(x2, y2); // Vẽ đường đến điểm lõm
+            }
+
+            ctx.closePath(); // Đóng đường vẽ (nối điểm cuối với điểm đầu)
+            ctx.fill(); // Tô màu ngôi sao
+            ctx.restore(); // Khôi phục trạng thái context ban đầu (bỏ shadow)
+        }
+
+        // --- Hiệu ứng pháo hoa ---
+        class Firework {
+            constructor(x, y, targetY) {
+                this.x = x || Math.random() * fireworksCanvas.width; // Vị trí X ngẫu nhiên hoặc chỉ định
+                this.y = y || fireworksCanvas.height; // Bắt đầu từ dưới màn hình hoặc chỉ định
+                this.targetY = targetY || Math.random() * fireworksCanvas.height * 0.6; // Độ cao nổ ngẫu nhiên
+                this.speed = 2 + Math.random() * 3; // Tốc độ bay lên ngẫu nhiên
+                this.radius = 2; // Kích thước viên pháo hoa
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                this.particles = []; // Mảng chứa các hạt pháo hoa sau khi nổ
+                this.exploded = false; // Trạng thái đã nổ hay chưa
+                this.particleCount = 50 + Math.floor(Math.random() * 100); // Số hạt khi nổ (đa dạng hơn)
+            }
+
+            update() {
+                if (!this.exploded) {
+                    // Nếu chưa nổ, di chuyển viên pháo hoa lên
+                    this.y -= this.speed;
+
+                    // Kiểm tra nếu đã đạt đến độ cao mục tiêu
+                    if (this.y <= this.targetY) {
+                        this.explode(); // Kích hoạt nổ
+                    }
+                }
+
+                // Cập nhật vị trí và trạng thái của các hạt pháo hoa
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    p.x += p.vx; // Cập nhật vị trí X theo vận tốc X
+                    p.y += p.vy; // Cập nhật vị trí Y theo vận tốc Y
+                    p.vy += 0.05; // Áp dụng trọng lực nhẹ
+                    p.alpha -= 0.01; // Giảm độ trong suốt (mờ dần)
+
+                    // Xóa hạt nếu nó đã quá mờ
+                    if (p.alpha <= 0) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+            }
+
+            explode() {
+                this.exploded = true; // Đánh dấu đã nổ
+
+                // *** ĐẶT LỆNH PHÁT ÂM THANH PHÁO HOA TẠI ĐÂY ***
+                // Bạn cần tải file âm thanh và viết hàm playSound() riêng
+                // Ví dụ: playFireworkSound();
+
+
+                // Tạo các hạt pháo hoa
+                for (let i = 0; i < this.particleCount; i++) {
+                    const angle = Math.random() * Math.PI * 2; // Góc ngẫu nhiên (tỏa ra mọi hướng)
+                    const speed = Math.cos(Math.random() * Math.PI / 2) * (3 + Math.random() * 4); // Tốc độ hạt ngẫu nhiên
+
+                    this.particles.push({
+                        x: this.x, // Vị trí ban đầu của hạt là vị trí nổ
+                        y: this.y,
+                        vx: Math.cos(angle) * speed, // Vận tốc X của hạt
+                        vy: Math.sin(angle) * speed, // Vận tốc Y của hạt
+                        color: this.color, // Màu của hạt (theo màu viên pháo hoa)
+                        alpha: 1, // Độ trong suốt ban đầu
+                        radius: 1 + Math.random() * 2.5 // Kích thước hạt ngẫu nhiên
+                    });
+                }
+            }
+
+            draw(ctx) {
+                if (!this.exploded) {
+                    // Vẽ viên pháo hoa khi đang bay lên
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+
+                    // Vẽ đuôi pháo hoa
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x, this.y + 10);
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                // Vẽ các hạt pháo hoa sau khi nổ
+                this.particles.forEach(p => {
+                    ctx.globalAlpha = p.alpha; // Đặt độ trong suốt cho hạt
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1; // Reset global alpha về mặc định
+            }
+        }
+
+        // Khởi tạo hệ thống pháo hoa
+        let fireworksCanvas, fireworksCtx;
+        let fireworks = []; // Mảng chứa các đối tượng Firework
+        let lastFireworkTime = 0; // Thời điểm quả pháo hoa cuối cùng được tạo
+        const maxFireworks = 12; // SỐ LƯỢNG PHÁO HOA TỐI ĐA CÙNG LÚC để kiểm soát hiệu suất
+
+        function initFireworks() {
+            fireworksCanvas = document.getElementById('fireworksCanvas');
+            // Lấy context 2D, thêm kiểm tra null
+            fireworksCtx = fireworksCanvas ? fireworksCanvas.getContext('2d') : null;
+
+            if (!fireworksCtx) {
+                console.error("Fireworks canvas not found!");
+                return; // Thoát nếu không tìm thấy canvas
+            }
+
+            // Hàm điều chỉnh kích thước canvas pháo hoa theo kích thước cửa sổ
+            function resize() {
+                fireworksCanvas.width = window.innerWidth;
+                fireworksCanvas.height = window.innerHeight;
+            }
+
+            // Lắng nghe sự kiện resize và điều chỉnh kích thước canvas
+            window.addEventListener('resize', resize);
+            resize(); // Điều chỉnh kích thước lần đầu
+
+            // Tạo một vài quả pháo hoa ban đầu khi load trang
+            for (let i = 0; i < 3; i++) {
+                fireworks.push(new Firework());
+            }
+
+            // Vòng lặp animation chính cho pháo hoa
+            function animateFireworks() {
+                requestAnimationFrame(animateFireworks); // Yêu cầu frame tiếp theo
+
+                // Làm mờ dần các frame trước để tạo hiệu ứng vệt khói/ánh sáng kéo dài
+                // Fill toàn bộ canvas với màu đen (hoặc màu nền) có độ trong suốt thấp
+                fireworksCtx.fillStyle = 'rgba(0, 0, 0, 0.08)'; // Độ mờ ít hơn để vệt khói rõ hơn
+                fireworksCtx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+
+                // Cập nhật và vẽ từng quả pháo hoa trong mảng
+                fireworks.forEach((fw, index) => {
+                    fw.update(); // Cập nhật trạng thái (bay lên, nổ, hạt bay)
+                    fw.draw(fireworksCtx); // Vẽ quả pháo hoa hoặc các hạt của nó
+
+                    // Loại bỏ quả pháo hoa khỏi mảng nếu nó đã nổ xong và không còn hạt nào
+                    if (fw.exploded && fw.particles.length === 0) {
+                        fireworks.splice(index, 1);
+                    }
+                });
+
+                // Thêm quả pháo hoa mới theo thời gian, có giới hạn số lượng tối đa
+                const now = Date.now();
+                // Tạo pháo hoa mới sau một khoảng thời gian ngẫu nhiên và nếu chưa đạt giới hạn số lượng
+                if (now - lastFireworkTime > (1000 + Math.random() * 1000) && fireworks.length < maxFireworks) {
+                    fireworks.push(new Firework()); // Tạo quả pháo hoa mới
+                    lastFireworkTime = now; // Cập nhật thời điểm tạo
+                }
+            }
+
+            animateFireworks(); // Bắt đầu vòng lặp animation
+
+            // Thêm sự kiện click để tạo pháo hoa tại vị trí click
+            fireworksCanvas.addEventListener('click', (e) => {
+                // Bắn pháo hoa từ dưới màn hình lên điểm click
+                fireworks.push(new Firework(e.clientX, fireworksCanvas.height, e.clientY));
+            });
+        }
+
+        // --- Hiệu ứng hạt nền nhẹ nhàng ---
+        class BackgroundParticle {
+            constructor(ctx, width, height) {
+                this.ctx = ctx;
+                this.width = width;
+                this.height = height;
+                this.reset(); // Khởi tạo vị trí và thuộc tính ngẫu nhiên ban đầu
+            }
+
+            reset() {
+                // Vị trí ngẫu nhiên trên canvas
+                this.x = Math.random() * this.width;
+                this.y = Math.random() * this.height;
+                this.size = Math.random() * 2 + 0.5; // Kích thước hạt nhỏ ngẫu nhiên
+                this.speedY = Math.random() * 0.5 + 0.1; // Tốc độ rơi chậm ngẫu nhiên
+                this.speedX = (Math.random() - 0.5) * 0.4; // Di chuyển ngang nhẹ ngẫu nhiên (-0.2 đến 0.2)
+                this.alpha = Math.random() * 0.5 + 0.2; // Độ trong suốt mờ ngẫu nhiên
+                // Lấy màu ngẫu nhiên từ các biến CSS đã định nghĩa
+                const colorNames = ['--red', '--yellow', '--blue', '--white', '--light-blue', '--dark-blue'];
+                const randomColorName = colorNames[Math.floor(Math.random() * colorNames.length)];
+                // Sử dụng getComputedStyle để lấy giá trị màu thực tế từ biến CSS
+                this.color = getComputedStyle(document.documentElement).getPropertyValue(randomColorName).trim();
+            }
+
+            update() {
+                this.y += this.speedY; // Cập nhật vị trí Y theo tốc độ rơi
+                this.x += this.speedX; // Cập nhật vị trí X theo tốc độ ngang
+                this.alpha -= 0.001; // Giảm độ trong suốt từ từ (mờ dần)
+
+                // Reset hạt khi nó ra khỏi màn hình hoặc đã quá mờ
+                if (this.y > this.height + this.size || this.alpha <= 0) {
+                    this.reset(); // Reset thuộc tính
+                    this.y = -this.size; // Bắt đầu lại từ phía trên màn hình
+                    this.alpha = Math.random() * 0.5 + 0.2; // Reset độ trong suốt
+                }
+            }
+
+            draw() {
+                this.ctx.globalAlpha = this.alpha; // Đặt độ trong suốt cho hạt
+                this.ctx.beginPath(); // Bắt đầu đường vẽ hình tròn
+                this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); // Vẽ hình tròn
+                this.ctx.fillStyle = this.color; // Đặt màu fill
+                this.ctx.fill(); // Tô màu hình tròn
+                this.ctx.globalAlpha = 1; // Reset global alpha
+            }
+        }
+
+        let bgParticlesCanvas, bgParticlesCtx;
+        let bgParticles = []; // Mảng chứa các đối tượng BackgroundParticle
+        const numBgParticles = 150; // Số lượng hạt nền (có thể điều chỉnh)
+
+        function initBackgroundParticles() {
+            bgParticlesCanvas = document.getElementById('backgroundEffectsCanvas');
+            // Lấy context 2D, thêm kiểm tra null
+            bgParticlesCtx = bgParticlesCanvas ? bgParticlesCanvas.getContext('2d') : null;
+
+            if (!bgParticlesCtx) {
+                console.error("Background effects canvas not found!");
+                return; // Thoát nếu không tìm thấy canvas
+            }
+
+            // Hàm điều chỉnh kích thước canvas hạt nền theo kích thước cửa sổ
+            function resize() {
+                bgParticlesCanvas.width = window.innerWidth;
+                bgParticlesCanvas.height = window.innerHeight;
+            }
+
+            // Lắng nghe sự kiện resize và điều chỉnh kích thước canvas
+            window.addEventListener('resize', resize);
+            resize(); // Điều chỉnh kích thước lần đầu
+
+            // Tạo số lượng hạt nền theo cấu hình
+            for (let i = 0; i < numBgParticles; i++) {
+                bgParticles.push(new BackgroundParticle(bgParticlesCtx, bgParticlesCanvas.width, bgParticlesCanvas.height));
+            }
+
+            // Vòng lặp animation cho các hạt nền
+            function animateBgParticles() {
+                requestAnimationFrame(animateBgParticles); // Yêu cầu frame tiếp theo
+                // Xóa toàn bộ canvas mỗi frame để vẽ lại (tạo hiệu ứng các hạt riêng biệt)
+                bgParticlesCtx.clearRect(0, 0, bgParticlesCanvas.width, bgParticlesCanvas.height);
+
+                // Cập nhật và vẽ từng hạt
+                bgParticles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+            }
+
+            animateBgParticles(); // Bắt đầu vòng lặp animation
+        }
+
+
+        // --- Thêm các phần tử trôi nổi (đa dạng hình dạng và animation hơn) ---
+        function addFloatingElements() {
+            const shapes = [
+                'M20,50 L50,10 L80,50 L50,90 Z', // Kim cương
+                'M50,10 L90,50 L50,90 L10,50 Z', // Hình thoi
+                'M50,10 L80,80 L20,80 Z', // Tam giác
+                'M30,30 L70,30 L70,70 L30,70 Z', // Vuông
+                'M50,10 L61.8,38.2 L90,40.5 L69,61.8 L75.5,90 L50,75.5 L24.5,90 L31,61.8 L10,40.5 L38.2,38.2 Z', // Ngôi sao 5 cánh
+                'M50,0 A50,50 0 1,1 50,100 A50,50 0 1,1 50,0 Z', // Hình tròn
+                'M10 50 Q 50 10 90 50 T 10 50 Z', // Hình trái tim (đơn giản)
+                'M50,10 L50,90 M10,50 L90,50', // Dấu cộng
+                'M50 0 L20 100 L90 40 L10 40 L80 100 Z' // Ngôi sao 5 cánh đặc biệt (có thể thử)
+            ];
+
+            const colors = ['--red', '--yellow', '--blue', '--dark-blue', '--light-blue'];
+
+            // Xóa các phần tử trôi nổi cũ nếu có (để tránh nhân đôi khi resize)
+            document.querySelectorAll('.floating-element').forEach(el => el.remove());
+
+            // Tạo mới các phần tử trôi nổi
+            for (let i = 0; i < 30; i++) { // Tăng số lượng phần tử trôi nổi lên 30
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+
+                const size = 40 + Math.random() * 60; // Kích thước ngẫu nhiên
+                const shapeIndex = Math.floor(Math.random() * shapes.length); // Chọn hình dạng ngẫu nhiên
+                const colorVarName = colors[Math.floor(Math.random() * colors.length)]; // Chọn tên biến màu ngẫu nhiên
+                // Lấy giá trị màu CSS thực tế
+                const fillColor = getComputedStyle(document.documentElement).getPropertyValue(colorVarName).trim();
+
+
+                element.style.width = `${size}px`;
+                element.style.height = `${size}px`;
+                // Vị trí ban đầu ngẫu nhiên, có thể nằm ngoài màn hình một chút
+                element.style.left = `${Math.random() * 120 - 10}%`;
+                element.style.top = `${Math.random() * 120 - 10}%`;
+                element.style.animationDuration = `${15 + Math.random() * 15}s`; // Thời gian animation di chuyển đa dạng hơn
+                element.style.animationDelay = `${Math.random() * 8}s`; // Delay animation ngẫu nhiên
+                // Áp dụng cả animation 'float' (di chuyển/xoay) và 'fadeInOut' (mờ/hiện)
+                element.style.animation = `float ${element.style.animationDuration} ${element.style.animationDelay} infinite linear, fadeInOut ${Math.random() * 10 + 5}s infinite ease-in-out alternate`;
+
+
+                // Tạo SVG hình dạng ngẫu nhiên và nhúng vào phần tử div
+                const svg = `<svg viewBox="0 0 100 100" fill="${fillColor}">
+                    <path d="${shapes[shapeIndex]}"/>
+                </svg>`;
+
+                element.innerHTML = svg;
+                document.body.appendChild(element); // Thêm phần tử vào body
+            }
+
+            // Lưu ý: Keyframes fadeInOut đã được định nghĩa trong CSS ở đầu file.
+            // Đoạn code thêm keyframes bằng JS ở phiên bản trước là không cần thiết nếu keyframes đã có trong <style>.
+        }
+
+        // HƯỚNG DẪN THÊM ÂM THANH PHÁO HOA:
+        /*
+        Để thêm âm thanh cho pháo hoa, bạn cần:
+        1. Có file âm thanh (.mp3, .wav, .ogg) cho tiếng pháo hoa nổ.
+        2. Tải các file này lên cùng thư mục hoặc một thư mục con của trang web.
+        3. Thêm code JavaScript để tải và phát âm thanh:
+           // Khai báo biến Audio ở đầu script hoặc trong hàm initFireworks
+           // Ví dụ:
+           // let fireworkSound1 = new Audio('duong/dan/den/file_am_thanh_1.mp3');
+           // let fireworkSound2 = new Audio('duong/dan/den/file_am_thanh_2.mp3'); // Thêm nếu có nhiều âm thanh
+           // Có thể tải trước âm thanh để phát mượt hơn
+           // fireworkSound1.load();
+           // fireworkSound2.load();
+
+           // Tạo một hàm để phát âm thanh (để quản lý việc phát nhiều lần và tránh lỗi)
+           // function playFireworkSound() {
+               // Chọn ngẫu nhiên một âm thanh nếu có nhiều file
+               // const sounds = [fireworkSound1, fireworkSound2];
+               // const soundToPlay = sounds[Math.floor(Math.random() * sounds.length)];
+
+               // const soundToPlay = fireworkSound1; // Dùng 1 âm thanh nếu chỉ có 1 file
+
+               // Kiểm tra trạng thái tải và thời gian hiện tại trước khi phát lại
+               // if (soundToPlay && soundToPlay.readyState > 0) { // readyState > 0 nghĩa là âm thanh đã sẵn sàng hoặc đang tải
+                  // Quan trọng: Reset thời gian về 0 để có thể phát lại ngay cả khi âm thanh đang chạy
+                  // soundToplay.currentTime = 0;
+                  // play() trả về Promise, sử dụng catch để bắt lỗi nếu trình duyệt chặn autoplay
+                  // soundToPlay.play().catch(e => console.error("Lỗi khi phát âm thanh:", e));
+               // } else {
+                  // console.warn("Âm thanh chưa sẵn sàng hoặc không tải được.");
+               // }
+           // }
+
+        4. Gọi hàm playFireworkSound() bên trong phương thức Firework.explode() của class Firework.
+           Đoạn code `// KÍCH HOẠT ÂM THANH TẠI ĐÂY (XEM HƯỚNG DẪN BÊN DƯỚI)`
+           Ví dụ: `playFireworkSound();` ngay sau dòng comment đó.
+
+        Lưu ý: Hầu hết các trình duyệt hiện đại chỉ cho phép phát âm thanh tự động (autoplay) sau khi người dùng đã có tương tác (click, cuộn) với trang. Việc bạn có hiệu ứng click để bắn pháo hoa là một cách tốt để người dùng tương tác và cho phép âm thanh được phát sau đó.
+        */
+
+    </script>
+</body>
+
+</html>
